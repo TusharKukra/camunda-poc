@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1h19l0p" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="adha-File-Upload" name="adhaFileUpload" isExecutable="true">
+    <bpmn:startEvent id="StartEvent">
+      <bpmn:outgoing>SequenceFlow1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_1cemg9s">
+      <bpmn:incoming>Flow_184r130</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_08alvcv">
+      <bpmn:incoming>Flow_0uox4vs</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_0pldti6" name="Trigger Email to CAD Checker" camunda:class="com.tk.adhaFileUpload.service.TriggerCADMail">
+      <bpmn:incoming>Flow_1bgxfaz</bpmn:incoming>
+      <bpmn:outgoing>Flow_0uox4vs</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="ServiceTask_Logger" name="Filter and Save File Records">
+      <bpmn:incoming>SequenceFlow1</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ovj1t3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_07hfpgp">
+      <bpmn:incoming>Flow_1ovj1t3</bpmn:incoming>
+      <bpmn:outgoing>Flow_184r130</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1bgxfaz</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow1" sourceRef="StartEvent" targetRef="ServiceTask_Logger" />
+    <bpmn:sequenceFlow id="Flow_184r130" name="Save File Record Failure" sourceRef="Gateway_07hfpgp" targetRef="Event_1cemg9s">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${memberId!=101}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0uox4vs" sourceRef="Activity_0pldti6" targetRef="Event_08alvcv" />
+    <bpmn:sequenceFlow id="Flow_1bgxfaz" name="Save File Record Complete" sourceRef="Gateway_07hfpgp" targetRef="Activity_0pldti6">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${memberId==101}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1ovj1t3" name="Save File Record Status" sourceRef="ServiceTask_Logger" targetRef="Gateway_07hfpgp" />
+    <bpmn:textAnnotation id="TextAnnotation_0nsujrd">
+      <bpmn:text>expected: ADHA file
+initiated via: http rest end point
+Actor: RPA Bot</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_00a3ryi">
+      <bpmn:text>Task to be done:
+1. Start process.
+Return Success/Failure to RPA Bot</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_09tsz36">
+      <bpmn:text>Completed by API Call</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_1hstjxw">
+      <bpmn:text>Send failure response to RPA bot</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_00r5bn8" sourceRef="StartEvent" targetRef="TextAnnotation_0nsujrd" />
+    <bpmn:association id="Association_1iyqjq3" sourceRef="StartEvent" targetRef="TextAnnotation_00a3ryi" />
+    <bpmn:association id="Association_15x3q34" sourceRef="Event_1cemg9s" targetRef="TextAnnotation_1hstjxw" />
+    <bpmn:association id="Association_1qvktyh" sourceRef="ServiceTask_Logger" targetRef="TextAnnotation_09tsz36" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="adha-File-Upload">
+      <bpmndi:BPMNShape id="TextAnnotation_0nsujrd_di" bpmnElement="TextAnnotation_0nsujrd">
+        <dc:Bounds x="140" y="70" width="79" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1ovj1t3_di" bpmnElement="Flow_1ovj1t3">
+        <di:waypoint x="426" y="310" />
+        <di:waypoint x="545" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="443" y="276" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bgxfaz_di" bpmnElement="Flow_1bgxfaz">
+        <di:waypoint x="595" y="310" />
+        <di:waypoint x="690" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="600" y="276" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uox4vs_di" bpmnElement="Flow_0uox4vs">
+        <di:waypoint x="790" y="310" />
+        <di:waypoint x="892" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_184r130_di" bpmnElement="Flow_184r130">
+        <di:waypoint x="570" y="335" />
+        <di:waypoint x="570" y="452" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="577" y="397" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow1_di" bpmnElement="SequenceFlow1">
+        <di:waypoint x="198" y="310" />
+        <di:waypoint x="326" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_di" bpmnElement="StartEvent">
+        <dc:Bounds x="162" y="292" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1cemg9s_di" bpmnElement="Event_1cemg9s">
+        <dc:Bounds x="552" y="452" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_08alvcv_di" bpmnElement="Event_08alvcv">
+        <dc:Bounds x="892" y="292" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pldti6_di" bpmnElement="Activity_0pldti6">
+        <dc:Bounds x="690" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_Logger_di" bpmnElement="ServiceTask_Logger">
+        <dc:Bounds x="326" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_07hfpgp_di" bpmnElement="Gateway_07hfpgp" isMarkerVisible="true">
+        <dc:Bounds x="545" y="285" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_00a3ryi_di" bpmnElement="TextAnnotation_00a3ryi">
+        <dc:Bounds x="130" y="450" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_09tsz36_di" bpmnElement="TextAnnotation_09tsz36">
+        <dc:Bounds x="330" y="140" width="100" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1hstjxw_di" bpmnElement="TextAnnotation_1hstjxw">
+        <dc:Bounds x="520" y="540" width="100" height="55" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1iyqjq3_di" bpmnElement="Association_1iyqjq3">
+        <di:waypoint x="180" y="328" />
+        <di:waypoint x="180" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_15x3q34_di" bpmnElement="Association_15x3q34">
+        <di:waypoint x="570" y="488" />
+        <di:waypoint x="570" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1qvktyh_di" bpmnElement="Association_1qvktyh">
+        <di:waypoint x="377" y="270" />
+        <di:waypoint x="379" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_00r5bn8_di" bpmnElement="Association_00r5bn8">
+        <di:waypoint x="181" y="292" />
+        <di:waypoint x="187" y="180" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
